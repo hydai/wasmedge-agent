@@ -1,0 +1,10 @@
+{
+	"name": "wasmedge-agent-poc",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"description": "PoC extension: WasmEdge-sandboxed Rust cell runtime for prime-agent (DESIGN.md Phase 0)",
+	"pi": {
+		"extensions": ["./index.ts"]
+	}
+}
