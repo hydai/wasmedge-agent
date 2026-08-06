@@ -59,7 +59,25 @@ export default function (pi: ExtensionAPI) {
 	let workspaceDir: string | undefined;
 	let startupError: string | undefined;
 
+	function initRuntime(): void {
+		toolchain = resolveToolchain();
+		if (!existsSync(join(TEMPLATE_DIR, "target", "wasm32-wasip1", "release", "cell.wasm"))) {
+			warmTemplate(toolchain.cargoBin);
+		}
+		workspaceDir = createWorkspace(process.env.WASMEDGE_POC_WORKSPACE);
+		runner = undefined;
+		startupError = undefined;
+	}
+
 	function ensureRunner(): CellRunner {
+		if (!toolchain || !workspaceDir) {
+			// session_start failed or has not fired: initialize lazily.
+			try {
+				initRuntime();
+			} catch (err) {
+				startupError = `wasmedge-agent runtime unavailable: ${err instanceof Error ? err.message : err}`;
+			}
+		}
 		if (startupError) throw new Error(startupError);
 		if (!toolchain || !workspaceDir) throw new Error("wasmedge-agent runtime is not initialized");
 		if (!runner) {
@@ -145,23 +163,27 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("session_start", async (_event, ctx) => {
 		try {
-			toolchain = resolveToolchain();
-			if (!existsSync(join(TEMPLATE_DIR, "target", "wasm32-wasip1", "release", "cell.wasm"))) {
-				ctx.ui.notify("wasmedge-agent: warming template workspace (one-time)...", "info");
-				warmTemplate(toolchain.cargoBin);
-			}
-			workspaceDir = createWorkspace(process.env.WASMEDGE_POC_WORKSPACE);
-			runner = undefined;
-			startupError = undefined;
-			const state = listPersistentState(workspaceDir);
-			const stateNote =
-				state.stateKeys.length > 0 || state.libFunctions.length > 0
-					? ` (state keys: ${state.stateKeys.length}, lib fns: ${state.libFunctions.length})`
-					: "";
-			ctx.ui.setStatus("wasmedge", ctx.ui.theme.fg("accent", `🦀 ${toolchain.wasmedgeVersion.split(" ")[1] ?? "wasmedge"}${stateNote}`));
+			initRuntime();
 		} catch (err) {
 			startupError = `wasmedge-agent runtime unavailable: ${err instanceof Error ? err.message : err}`;
-			ctx.ui.notify(startupError, "error");
+			try {
+				ctx.ui.notify(startupError, "error");
+			} catch {
+				// cosmetics must never affect runtime state
+			}
+			return;
+		}
+		// Cosmetic status line — isolated so UI/theme quirks can't poison the runtime.
+		try {
+			const state = workspaceDir ? listPersistentState(workspaceDir) : undefined;
+			const stateNote =
+				state && (state.stateKeys.length > 0 || state.libFunctions.length > 0)
+					? ` (state keys: ${state.stateKeys.length}, lib fns: ${state.libFunctions.length})`
+					: "";
+			const version = toolchain?.wasmedgeVersion.split(" ")[1] ?? "wasmedge";
+			ctx.ui.setStatus("wasmedge", `🦀 ${version}${stateNote}`);
+		} catch {
+			// status line is optional
 		}
 	});
 }
