@@ -147,7 +147,8 @@ async function runOne(
 	variant: string,
 	rep: number,
 ): Promise<RunMeta> {
-	const runId = `${task.id}-${group}-${shortModel(model)}-${variant}-r${rep}-${Date.now().toString(36)}`;
+	const variantSlug = variant.replace(/[^a-z0-9]+/gi, "") || "default";
+	const runId = `${task.id}-${group}-${shortModel(model)}-${variantSlug}-r${rep}-${Date.now().toString(36)}`;
 	const runDir = join(RESULTS_DIR, "runs", runId);
 	const projectDir = join(runDir, "project");
 	const agentDir = join(runDir, "agent-dir");

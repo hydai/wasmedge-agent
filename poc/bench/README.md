@@ -59,3 +59,8 @@ turns, tool calls by name, cell count, compile-error cell share, cell duration
 p50/p95, error tool results. Aggregates are medians per (model, group[/variant])
 with the D20 gate evaluated per model: B pass-rate ≥ A − 15pp and B median
 output tokens ≤ 2.0 × A.
+
+Known caveat: the bytefuture gateway does not report input tokens in streaming
+responses, so `tokensIn` reads 0 through this provider. Both groups measure
+through the same path, so the A/B comparison is unaffected; the D20 token gate
+uses output tokens.
