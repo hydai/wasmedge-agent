@@ -52,7 +52,7 @@ Env knobs:
 | `WASMEDGE_AGENT_CARGO` | cargo binary path override |
 | `WASMEDGE_POC_PROMPT` | `example` (default) or `noexample` — D17 prompt sub-A/B |
 | `WASMEDGE_POC_WORKSPACE` | named workspace, reused across runs (default: fresh per session) |
-| `WASMEDGE_POC_WORKSPACE_ROOT` | workspace root (default `~/.wasmedge-agent/poc/workspaces`; keep it under HOME — readonly preopens fail under `/var/folders` on macOS) |
+| `WASMEDGE_POC_WORKSPACE_ROOT` | workspace root (default `~/.wasmedge-agent/poc/workspaces`, HOME-based so workspaces persist and survive OS temp cleanup) |
 
 Workspaces persist under `~/.wasmedge-agent/poc/workspaces/` for inspection:
 `state/state.json` is the agent's key-value state, `agent_lib/src/helpers/` its

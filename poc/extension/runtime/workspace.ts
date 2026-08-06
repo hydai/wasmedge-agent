@@ -13,7 +13,9 @@ import type { LibFile } from "./types.ts";
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const TEMPLATE_DIR = resolve(HERE, "..", "..", "guest", "template");
 
-/** HOME-based root: readonly preopens fail under /var/folders on macOS. */
+/** HOME-based root so workspaces persist across runs and survive OS temp
+ * cleanup. (An earlier note here blamed /var/folders readonly preopens — that
+ * was a zsh footgun, not WasmEdge; see docs/wasmedge-readonly-preopen-investigation.md.) */
 export function defaultWorkspaceRoot(): string {
 	return join(homedir(), ".wasmedge-agent", "poc", "workspaces");
 }

@@ -230,9 +230,11 @@ export class CellRunner {
 		return args;
 	}
 
-	/** Readonly preopens fail on some host paths (macOS /var/folders). Probe
-	 * once; on failure drop the lib mount entirely — never fall back to rw,
-	 * which would let cells bypass the declarative lib flow (D14). */
+	/** Defensive probe: if the readonly preopen ever fails to bind on this
+	 * host (older wasmedge, exotic path), drop the lib mount entirely — never
+	 * fall back to rw, which would let cells bypass the declarative lib flow
+	 * (D14). Verified working normally on 0.17.1; see
+	 * docs/wasmedge-readonly-preopen-investigation.md. */
 	private async probeLibReadonly(): Promise<void> {
 		if (this.probed) return;
 		this.probed = true;
