@@ -1,0 +1,81 @@
+import { existsSync, mkdirSync, readFileSync, rmSync } from "fs";
+import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { SettingsManager } from "../src/core/settings-manager.js";
+import { BUILTIN_SLASH_COMMANDS } from "../src/core/slash-commands.js";
+
+describe("fullscreen mode settings", () => {
+	const testDir = join(process.cwd(), "test-fullscreen-tmp");
+	const agentDir = join(testDir, "agent");
+	const projectDir = join(testDir, "project");
+	let savedEnv: string | undefined;
+
+	beforeEach(() => {
+		if (existsSync(testDir)) {
+			rmSync(testDir, { recursive: true });
+		}
+		mkdirSync(agentDir, { recursive: true });
+		mkdirSync(join(projectDir, ".prime", "agent"), { recursive: true });
+		savedEnv = process.env.PI_FULLSCREEN;
+		delete process.env.PI_FULLSCREEN;
+	});
+
+	afterEach(() => {
+		if (existsSync(testDir)) {
+			rmSync(testDir, { recursive: true });
+		}
+		if (savedEnv === undefined) {
+			delete process.env.PI_FULLSCREEN;
+		} else {
+			process.env.PI_FULLSCREEN = savedEnv;
+		}
+	});
+
+	it("defaults to on with mouse enabled", () => {
+		const manager = SettingsManager.create(projectDir, agentDir);
+		expect(manager.getFullscreen()).toBe(true);
+		expect(manager.getFullscreenMouse()).toBe(true);
+	});
+
+	it("persists the fullscreen off toggle", async () => {
+		const manager = SettingsManager.create(projectDir, agentDir);
+		manager.setFullscreen(false);
+		await manager.flush();
+
+		const settings = JSON.parse(readFileSync(join(agentDir, "settings.json"), "utf-8"));
+		expect(settings.terminal.fullscreen).toBe(false);
+
+		const reloaded = SettingsManager.create(projectDir, agentDir);
+		expect(reloaded.getFullscreen()).toBe(false);
+	});
+
+	it("PI_FULLSCREEN env var overrides the setting in both directions", () => {
+		const manager = SettingsManager.create(projectDir, agentDir);
+		manager.setFullscreen(false);
+
+		process.env.PI_FULLSCREEN = "1";
+		expect(manager.getFullscreen()).toBe(true);
+
+		manager.setFullscreen(true);
+		process.env.PI_FULLSCREEN = "0";
+		expect(manager.getFullscreen()).toBe(false);
+	});
+
+	it("persists the fullscreen mouse toggle", async () => {
+		const manager = SettingsManager.create(projectDir, agentDir);
+		manager.setFullscreenMouse(false);
+		await manager.flush();
+
+		const reloaded = SettingsManager.create(projectDir, agentDir);
+		expect(reloaded.getFullscreenMouse()).toBe(false);
+	});
+});
+
+describe("fullscreen slash command", () => {
+	it("is registered with an on|off argument hint", () => {
+		const command = BUILTIN_SLASH_COMMANDS.find((c) => c.name === "fullscreen");
+		expect(command).toBeDefined();
+		expect(command?.argumentHint).toBe("[on|off]");
+		expect(command?.takesArgument).toBe(true);
+	});
+});
