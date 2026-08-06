@@ -1,0 +1,7 @@
+{
+	"category": "build",
+	"turns": [
+		"The project root has customers.json and orders.csv. Compute each customer's total order amount and write spend.md in the project root: one line per customer in the format '<total> <customer name>', sorted by total descending, ties by name ascending, including all customers. No other content. Then stop."
+	],
+	"timeoutMs": 420000
+}

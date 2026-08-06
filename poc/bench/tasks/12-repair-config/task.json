@@ -1,0 +1,7 @@
+{
+	"category": "build",
+	"turns": [
+		"The project's config.json is corrupted and `node validate.js` rejects it. Repair config.json (do not modify validate.js) using the project documentation for intended values, until `node validate.js` prints 'config valid'. Then stop."
+	],
+	"timeoutMs": 420000
+}

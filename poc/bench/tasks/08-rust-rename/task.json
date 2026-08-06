@@ -1,0 +1,7 @@
+{
+	"category": "code-fix",
+	"turns": [
+		"This project is a Rust crate. Rename the public function calc_total to total_of everywhere it appears (definition, internal uses, and tests), keeping behavior identical. Verify with `cargo test` in the project until it passes. Then stop."
+	],
+	"timeoutMs": 540000
+}

@@ -1,0 +1,9 @@
+order_id,customer_id,amount
+o1,c1,120
+o2,c2,80
+o3,c1,45
+o4,c3,300
+o5,c2,150
+o6,c1,60
+o7,c4,10
+o8,c3,5

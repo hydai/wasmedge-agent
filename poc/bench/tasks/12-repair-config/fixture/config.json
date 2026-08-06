@@ -1,0 +1,6 @@
+{
+	"host": "api.internal",
+	"port": "8080",
+	"timeout_ms": 2500,
+	"features": ["tracing", "gzip",],
+}

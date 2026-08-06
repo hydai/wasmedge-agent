@@ -1,0 +1,9 @@
+{
+	"category": "state-reuse",
+	"turns": [
+		"This project contains server logs where error lines look like 'ERROR <kind> request_id=<n>'. Build yourself a reusable log-analysis capability for this format (so later turns can reuse it instead of rewriting), analyze day1.log, and persist the per-kind ERROR counts for later turns. Do not produce report files yet. Then stop.",
+		"Using the log-analysis capability you built in the previous turn, analyze day2.log the same way and persist its per-kind ERROR counts as well. Do not produce report files yet. Then stop.",
+		"From the counts you persisted for day1.log and day2.log, write summary.md in the project root: one line per error kind in the format '<kind> <day1 count> <day2 count>' (0 when absent that day), sorted alphabetically by kind. No other content. Then stop."
+	],
+	"timeoutMs": 480000
+}

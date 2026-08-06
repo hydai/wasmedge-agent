@@ -14,7 +14,7 @@ bench/
 └── results/      # gitignored: runs/<runId>/{project,agent-dir,workspaces,meta.json,turn-*.log}
 ```
 
-## Tasks (wave 1)
+## Tasks (full set, DESIGN.md appendix C)
 
 | id | category | shape |
 |---|---|---|
@@ -24,6 +24,15 @@ bench/
 | 04-multi-turn-state | state-reuse | turn 1 explore + persist; turn 2 answer from notes |
 | 05-toolchain-loop | toolchain | two planted bugs; iterate `node --test` until green |
 | 06-build-cli | build | write wordfreq.js CLI matching an exact output contract |
+| 07-todo-scan | text-data | multi-file TODO/FIXME scan → todos.md, exact format |
+| 08-rust-rename | code-fix | cross-file rename in a Rust crate; `cargo test` stays green |
+| 09-helper-accumulation | state-reuse | 3 turns: build capability → reuse on 2nd log → combined summary |
+| 10-lint-fix | toolchain | fix all `node lint.js` violations, behavior tests stay green |
+| 11-join-report | build | join customers.json × orders.csv → spend.md |
+| 12-repair-config | build | repair error-injected config.json against strict validator + OPS.md |
+
+(Wave-1 measurement launched before 07–12 existed and covers 01–06; rerun with
+`--tasks 07-...,...` or without `--tasks` for the full set.)
 
 Every fixture is deterministic and every `check.sh` is offline (node + coreutils
 only). Prompts are group-neutral ("the project root"): group A resolves it as

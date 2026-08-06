@@ -1,0 +1,7 @@
+{
+	"category": "toolchain",
+	"turns": [
+		"This project has a lint script: run `node lint.js` to see style violations in src/. Fix every violation without changing behavior (the tests in src/cart.test.js must still pass, do not modify lint.js or the tests). Re-run lint and tests until both are clean. Then stop."
+	],
+	"timeoutMs": 480000
+}

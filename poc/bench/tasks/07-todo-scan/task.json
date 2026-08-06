@@ -1,0 +1,7 @@
+{
+	"category": "text-data",
+	"turns": [
+		"Scan every .js file under src/ in the project for TODO and FIXME comment markers. Write todos.md in the project root with exactly one line per marker in the format '- <relative path>:<line number> <MARKER> <text after the colon>', sorted by path then line number. Example line: '- src/app.js:5 TODO cache rendered output'. No other content. Then stop."
+	],
+	"timeoutMs": 420000
+}
