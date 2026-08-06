@@ -565,7 +565,7 @@ wasmedge-agent/
 │   └── bench/                   # §6.3
 ```
 
-啟動：`prime-agent --no-builtin-tools --skill …/poc/extension`（extension 註冊 `rust` 與 `bash`——bash 從 SDK 匯出的 `createBashTool` 取得，sandbox 範例已示範此用法）。
+啟動：`prime-agent --no-builtin-tools -e …/poc/extension`（extension 以 `-e/--extension` 載入；註冊 `rust` 與 `bash`——bash 從 SDK 匯出的 `createBashTool` 取得，sandbox 範例已示範此用法）。
 
 **PoC 範圍界定**（明確不做）：無 BridgeServer/spawn/msg/goal（單 agent 任務）、無 TUI 自訂渲染（吃預設文字渲染）、無 skills、無 deps.add（prelude 鎖死）。**做**：cell 編譯執行迴路、`rlm::state`、agent_lib 自我擴充 + guard、prompt v0、串流。
 
