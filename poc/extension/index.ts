@@ -18,8 +18,8 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { createBashTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { runBash } from "./runtime/bash-tool.ts";
 import { CellRunner, composeToolText } from "./runtime/cell-runner.ts";
 import { buildSystemPrompt, type PromptVariant } from "./runtime/prompt.ts";
 import { resolveToolchain, type ToolchainInfo, warmTemplate } from "./runtime/toolchain.ts";
@@ -104,7 +104,39 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	// Keep bash available under --no-builtin-tools (D13: dual built-ins).
-	pi.registerTool(createBashTool(cwd));
+	// Minimal stand-in; Phase 1 uses the upstream tools/bash.ts.
+	pi.registerTool({
+		name: "bash",
+		label: "bash",
+		description:
+			"Run a shell command in the project's own environment (tests, builds, package " +
+			"managers, project CLIs). Use bash for the project's own commands; use rust cells " +
+			"for your own computation and file work.",
+		parameters: Type.Object({
+			command: Type.String({ description: "Shell command to execute" }),
+			timeout: Type.Optional(Type.Number({ description: "Timeout in seconds (default 120)" })),
+		}),
+		async execute(_toolCallId, params, signal, onUpdate) {
+			const { command, timeout } = params as { command: string; timeout?: number };
+			const result = await runBash(command, cwd, {
+				timeoutMs: (timeout ?? 120) * 1000,
+				signal,
+				onChunk: (chunk) => {
+					onUpdate?.({ content: [{ type: "text", text: chunk }], details: {} });
+				},
+			});
+			const suffix = result.timedOut
+				? "\n[command timed out and was killed]"
+				: result.exitCode !== 0
+					? `\n[exit code ${result.exitCode}]`
+					: "";
+			return {
+				content: [{ type: "text", text: (result.output + suffix).trim() || "(no output)" }],
+				details: result,
+				isError: result.timedOut || result.aborted || result.exitCode !== 0,
+			} as never;
+		},
+	});
 
 	pi.on("before_agent_start", () => {
 		const variant = (process.env.WASMEDGE_POC_PROMPT === "noexample" ? "noexample" : "example") as PromptVariant;
