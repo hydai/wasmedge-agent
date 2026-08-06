@@ -180,7 +180,12 @@ async function runOne(
 
 	for (let turn = 0; turn < task.turns.length; turn++) {
 		const args = [...baseArgs];
-		if (turn > 0) args.push("--resume");
+		if (turn > 0) {
+			// Bare --resume is interactive-only; headless requires the explicit path.
+			const sessionFile = findSessionFile(agentDir);
+			if (!sessionFile) throw new Error(`turn ${turn}: no session file to resume in ${agentDir}`);
+			args.push("--resume", sessionFile);
+		}
 		args.push("--print", task.turns[turn]);
 		const result = await runProcess(PRIME_AGENT_SH, args, {
 			cwd: projectDir,

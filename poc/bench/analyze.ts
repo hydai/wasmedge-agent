@@ -6,7 +6,7 @@
  *   node poc/bench/analyze.ts [--csv results/bench.csv]
  */
 
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -90,14 +90,31 @@ function median(values: number[]): number {
 	return percentile(values, 50);
 }
 
+/** Find meta.json up to depth 3 (tolerates the pre-fix nested "n/a" dirs). */
+function findMetaFiles(dir: string, depth = 0): string[] {
+	const out: string[] = [];
+	for (const name of readdirSync(dir).sort()) {
+		const path = join(dir, name);
+		if (name === "meta.json") out.push(path);
+		else if (depth < 3) {
+			try {
+				if (statSync(path).isDirectory() && !["project", "agent-dir", "workspaces"].includes(name)) {
+					out.push(...findMetaFiles(path, depth + 1));
+				}
+			} catch {
+				// unreadable entry: skip
+			}
+		}
+	}
+	return out;
+}
+
 const runs: RunMetrics[] = [];
 if (!existsSync(RUNS_DIR)) {
 	console.error(`no runs at ${RUNS_DIR}`);
 	process.exit(1);
 }
-for (const name of readdirSync(RUNS_DIR).sort()) {
-	const metaPath = join(RUNS_DIR, name, "meta.json");
-	if (!existsSync(metaPath)) continue;
+for (const metaPath of findMetaFiles(RUNS_DIR)) {
 	const meta = JSON.parse(readFileSync(metaPath, "utf-8"));
 	const m: RunMetrics = {
 		runId: meta.runId,
