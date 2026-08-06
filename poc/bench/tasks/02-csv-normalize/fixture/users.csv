@@ -1,0 +1,5 @@
+id , name ,email, age,active
+ 1,Alice Smith , ALICE@example.com ,34,yes
+2 , Bob Jones,bob@EXAMPLE.com, 41 ,no
+3,  Carol White ,carol@example.COM,28,YES
+ 4 ,Dan Brown, dan@example.com ,55,No

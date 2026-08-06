@@ -1,0 +1,7 @@
+{
+	"category": "toolchain",
+	"turns": [
+		"Run this project's tests with `node --test`, read the failures, fix stats.js (do not change the tests), and repeat until every test passes. Then stop."
+	],
+	"timeoutMs": 480000
+}

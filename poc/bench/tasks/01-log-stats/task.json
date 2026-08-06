@@ -1,0 +1,7 @@
+{
+	"category": "text-data",
+	"turns": [
+		"Analyze app.log in the project root. Count how many lines start with ERROR for each error kind (the word right after ERROR). Write a file report.md in the project root containing exactly one line per error kind in the format '<count> <kind>', sorted by count descending. No other content. Then stop."
+	],
+	"timeoutMs": 420000
+}

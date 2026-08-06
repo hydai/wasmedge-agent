@@ -1,0 +1,7 @@
+{
+	"category": "code-fix",
+	"turns": [
+		"The project has interval.js with a bug; its test suite fails. Run the tests with `node --test`, find the bug, fix interval.js (do not change the tests), and re-run until all tests pass. Then stop."
+	],
+	"timeoutMs": 480000
+}

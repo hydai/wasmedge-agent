@@ -1,0 +1,7 @@
+{
+	"category": "build",
+	"turns": [
+		"Create wordfreq.js in the project root: a Node.js CLI used as `node wordfreq.js <file> <N>`. It lowercases the text, splits words on any non-letter characters, and prints the top-N words, one per line, in the format '<count> <word>', sorted by count descending and ties by word ascending. Verify it against text.txt before finishing. Then stop."
+	],
+	"timeoutMs": 480000
+}

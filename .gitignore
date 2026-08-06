@@ -2,4 +2,6 @@ node_modules/
 target/
 dist/
 *.log
+!poc/bench/tasks/*/fixture/*.log
 .DS_Store
+poc/bench/results/

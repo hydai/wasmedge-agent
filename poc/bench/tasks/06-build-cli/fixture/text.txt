@@ -1,0 +1,3 @@
+The cat sat on the mat. The cat saw the dog.
+The dog sat. A cat ran; the mat stayed.
+Sat and sat again -- the cat wins.

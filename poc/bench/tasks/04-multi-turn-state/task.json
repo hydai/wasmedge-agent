@@ -1,0 +1,8 @@
+{
+	"category": "state-reuse",
+	"turns": [
+		"Familiarize yourself with this repository: catalog every module directory under src/ and the functions each file defines. Persist your findings so you can answer follow-up questions in later turns without re-reading the code. Do not produce any files. Then stop.",
+		"Using what you already learned about this repo (avoid re-reading files if your saved notes suffice), write a file answer.txt in the project root containing the names of the directories under src/ that define a function named handle, comma-separated, sorted alphabetically, on a single line. Then stop."
+	],
+	"timeoutMs": 600000
+}

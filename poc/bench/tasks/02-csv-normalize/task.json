@@ -1,0 +1,7 @@
+{
+	"category": "text-data",
+	"turns": [
+		"The project root has users.csv with messy whitespace and inconsistent casing. Produce users.json in the project root: a JSON array of objects with keys id (number), name (string, trimmed), email (string, trimmed and lowercased), age (number), active (boolean, from yes/no case-insensitive). Preserve row order. Then stop."
+	],
+	"timeoutMs": 420000
+}
