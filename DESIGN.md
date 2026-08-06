@@ -611,8 +611,10 @@ wasmedge-agent/
 
 ### 7.1 Repo 策略
 
-- **（D22 定案）**M1 GO 後 fork `PrimeIntellect-ai/prime-agent` → **`hydai/wasmedge-agent`**（個人 repo 低調進行，失敗成本低）；M5 MVP 驗收通過後 transfer 至 second-state org 正式化。保留 `upstream` remote。
+- **（D22 定案）**M1 GO 後 fork 至 **`hydai/wasmedge-agent`**（個人 repo 低調進行，失敗成本低）；M5 MVP 驗收通過後 transfer 至 second-state org 正式化。保留 `upstream` remote。
 - **（D23 定案）**不向上游探詢 runtime 抽象層意願，直接獨立 fork——自主性與差異化窗口優先，接受長期 SYNC 稅（§7.3 即為此而設計）。
+- **（D24 定案，修訂 D22 執行細節）**不用 GitHub fork 機制（fork 強制公開、issues/搜尋受限、badge+改名觀感差）。改以**吸收合併**：在既有 wasmedge-agent repo `git merge --allow-unrelated-histories upstream/main`，單一 repo 保雙邊完整歷史；GitHub 開 **private** repo；attribution 以根 README 顯著鳴謝 Prime Intellect（prime-agent）與 badlogic（pi）——正是 prime-agent 對 pi-mono 的既有先例。
+- **（D25 定案，修訂本節原「只改 bin 名與品牌字串」）**M2–M4 孵化期**零改名**：bin、`piConfig.name`、env prefix（`PRIME_AGENT_*`）、config 目錄全部照舊（bench/文件/SYNC 零陣痛）；身分僅靠 repo 名與根 README。完整 rebrand（含 config 目錄遷移邏輯）於 M5 一次專門 commit 完成。根 README 是孵化期唯一允許的身分檔案改動。
 - Package 更名：`@earendil-works/pi-*` 依賴關係保留（沿用上游做法——他們 fork 後也沒改依賴名），只改 `coding-agent` 的 bin 名與品牌字串；正式命名見 §11 D10。
 - PoC 產物遷移：`poc/runtime/*` 升格為 `packages/coding-agent/src/core/rust-cell/`；`poc/guest/` 升格為 repo 頂層 `wasmedge-agent-runtime/`（位置對映 `prime-agent-runtime/`，`copy-assets` 腳本同機制打包模板）。
 
@@ -728,6 +730,8 @@ CI 注意：kernel 測試刪除後，上游 `test:kernel` script 位置換 `test
 | D21 ✅ | PoC 模型組合：Claude sonnet 級 + opus/fable 級 + 開源權重一家（~216 runs、$200–600） | 主力情境＋能力上限＋跨家普適性各取一點；開源家兼作 LlamaEdge 故事前哨（§6.2） |
 | D22 ✅ | M1 GO 後 fork 至 `hydai/wasmedge-agent` 個人 repo；M5 驗收通過後 transfer 至 second-state org | 低調驗證、失敗成本低、不背品牌期待；轉移的 star 歸零影響小（§7.1） |
 | D23 ✅ | **不探詢上游**，直接獨立 fork | 使用者裁定（否決「帶 PoC 數據去談」的建議案）：自主性與差異化窗口優先於潛在省工；SYNC 稅由 §7.3 三區策略承擔 |
+| D24 ✅ | 吸收合併取代 GitHub fork 機制；private repo；README attribution | GitHub fork 強制公開違反 D22 低調意圖且功能受限；prime-agent 對 pi 的先例即獨立 repo + README 鳴謝（§7.1） |
+| D25 ✅ | 孵化期（M2–M4）零改名，完整 rebrand 延至 M5 | piConfig.name 牽動 env prefix/config 目錄，早改名＝bench/文件/SYNC 全面陣痛且 M5 可能重演；根 README 為唯一身分檔案（§7.1） |
 
 **審閱記錄**：
 - 2026-08-06 第 1 輪（§1 總體架構）——D11/D12/D13 確認；分層圖、進程模型、原則 1–5 無異議成立。
@@ -736,6 +740,7 @@ CI 注意：kernel 測試刪除後，上游 `test:kernel` script 位置換 `test
 - 2026-08-06 第 4 輪（§4–§5 Skills/遞迴）——D18/D19 確認；另定案 skills 全掛載；bundled 處置表、harness reference 規格、goals/compaction/MCP 平移無異議成立。
 - 2026-08-06 第 5 輪（§6 PoC）——D20/D21 確認；另定案 fixture repos 固定化、baseline 全功能對照；載具、範圍界定、指標集成立。
 - 2026-08-06 第 6 輪（§7–§12）——D22/D23 確認（D23 否決原 D10 的上游探詢建議）；WP 分解、SYNC 三區、Phase 2 概要、測試五層、組態、里程碑結構成立。**全文件審閱完成，狀態：已定稿（formalized）。**
+- 2026-08-06 M2 起手審閱——D24/D25 確認（使用者質疑「fork 直接改名」引發；修訂 D22 執行細節與 §7.1 改名時機）。
 
 ## 12. 里程碑與時程
 
