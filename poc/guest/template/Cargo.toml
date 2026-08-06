@@ -1,0 +1,9 @@
+[workspace]
+members = ["agent_lib", "cell", "rlm"]
+resolver = "2"
+
+[profile.release]
+incremental = true
+
+[profile.dev.package."*"]
+debug = false
